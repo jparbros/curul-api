@@ -1,5 +1,3 @@
-class Legislature < ActiveRecord::Base
+class Position < ActiveRecord::Base
   attr_accessible :application_id, :name
-
-
 end
