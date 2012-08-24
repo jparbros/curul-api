@@ -1,2 +1,0 @@
-class RepresentativesController < ApplicationController
-end

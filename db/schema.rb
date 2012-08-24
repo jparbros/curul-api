@@ -11,13 +11,63 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120717141901) do
+ActiveRecord::Schema.define(:version => 20120824140619) do
+
+  create_table "admins", :force => true do |t|
+    t.string   "email",                  :default => "", :null => false
+    t.string   "encrypted_password",     :default => "", :null => false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.string   "authentication_token"
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.integer  "application_id"
+  end
+
+  add_index "admins", ["authentication_token"], :name => "index_admins_on_authentication_token", :unique => true
+  add_index "admins", ["email"], :name => "index_admins_on_email", :unique => true
+  add_index "admins", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
+
+  create_table "admins_applications", :force => true do |t|
+    t.integer "admin_id"
+    t.integer "application_id"
+  end
 
   create_table "applications", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.string   "access_token"
   end
+
+  create_table "comments", :force => true do |t|
+    t.string   "title"
+    t.text     "comment"
+    t.integer  "commentable_id"
+    t.string   "commentable_type"
+    t.boolean  "approved"
+    t.integer  "tendency"
+    t.integer  "reply_to"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "comments", ["commentable_id"], :name => "index_comments_on_commentable_id"
+
+  create_table "commissions", :force => true do |t|
+    t.string   "name"
+    t.integer  "application_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "commissions", ["application_id"], :name => "index_commissions_on_application_id"
 
   create_table "contact_profiles", :force => true do |t|
     t.string   "kind"
@@ -26,8 +76,39 @@ ActiveRecord::Schema.define(:version => 20120717141901) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "initiatives", :force => true do |t|
+    t.string   "title"
+    t.text     "description"
+    t.datetime "presented_at"
+    t.datetime "voted_at"
+    t.string   "state"
+    t.integer  "official_vote_up"
+    t.integer  "official_vote_down"
+    t.integer  "official_vote_abstentions"
+    t.integer  "comments_count"
+    t.string   "number"
+    t.integer  "position"
+    t.string   "year"
+    t.integer  "representative_id"
+    t.boolean  "main"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "initiatives", ["representative_id"], :name => "index_initiatives_on_representative_id"
+
   create_table "legislatures", :force => true do |t|
     t.string   "name"
+    t.integer  "application_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.boolean  "active"
+  end
+
+  create_table "political_parties", :force => true do |t|
+    t.string   "name"
+    t.string   "initials"
+    t.string   "logo"
     t.integer  "application_id"
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
@@ -52,7 +133,7 @@ ActiveRecord::Schema.define(:version => 20120717141901) do
     t.string   "email"
     t.string   "election_type"
     t.integer  "number_votes"
-    t.integer  "region_id"
+    t.integer  "state_id"
     t.integer  "province_id"
     t.integer  "political_party_id"
     t.integer  "substitute_id"
@@ -60,6 +141,16 @@ ActiveRecord::Schema.define(:version => 20120717141901) do
     t.boolean  "following"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
+    t.string   "substitute"
+    t.integer  "application_id"
+    t.string   "position"
+  end
+
+  create_table "states", :force => true do |t|
+    t.string   "name"
+    t.integer  "application_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
 end
